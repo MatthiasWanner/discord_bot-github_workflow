@@ -1,5 +1,7 @@
 import express from 'express';
 
+import interactions from './interactions/routes';
+
 const router = express.Router();
 
 router.get('/', (_, res) => {
@@ -7,5 +9,7 @@ router.get('/', (_, res) => {
     message: 'API - 👋🌎🌍🌏',
   });
 });
+
+router.use('/interactions', interactions);
 
 export default router;

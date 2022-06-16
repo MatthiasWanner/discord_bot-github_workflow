@@ -1,18 +1,33 @@
 import { BitFieldResolvable, Collection, IntentsString, Options, PartialTypes } from 'discord.js';
 import dotenv from 'dotenv';
+import express from 'express';
 
+import api from './api';
 import { botCommands } from './commands';
 import { IBotCommande } from './commands/commands.types';
 import { config } from './config';
 import { CustomClient } from './extensions';
+import { VerifyDiscordRequest } from './utils';
 
 dotenv.config();
 
 const start = async (): Promise<void> => {
-  const appToken = config.client.token;
-  if (!appToken) throw new Error('No Bot token Provided');
+  const app = express();
+  const { client, port } = config;
 
-  const client = new CustomClient({
+  if (!client.id || !client.token || !client.publicKey)
+    throw new Error('Missing client ID, token or public key');
+
+  app.use(express.json({ verify: VerifyDiscordRequest(client.publicKey) }));
+
+  app.use('/', api);
+
+  app.listen(port, async () => {
+    // eslint-disable-next-line no-console
+    console.log(`Listening: http://localhost:${port}`);
+  });
+
+  const discordClient = new CustomClient({
     intents: config.client.intents as BitFieldResolvable<IntentsString, number>,
     partials: config.client.partials as PartialTypes[],
     makeCache: Options.cacheWithLimits({
@@ -23,7 +38,7 @@ const start = async (): Promise<void> => {
     }),
   });
 
-  client.login(appToken);
+  discordClient.login(client.token);
 
   const botCommandsCollection = new Collection<string, IBotCommande>();
 
@@ -31,11 +46,11 @@ const start = async (): Promise<void> => {
     botCommandsCollection.set(botCommands[key].name, botCommands[key]);
   });
 
-  client.on('ready', () => {
-    console.info(`Logged in as ${client.user?.tag || 'Unknow'}!`);
+  discordClient.on('ready', () => {
+    console.info(`Logged in as ${discordClient.user?.tag || 'Unknow'}!`);
   });
 
-  client.on('messageCreate', msg => {
+  discordClient.on('messageCreate', msg => {
     const args = msg.content.split(/ +/);
     const command = args.shift()?.toLowerCase() || '';
 

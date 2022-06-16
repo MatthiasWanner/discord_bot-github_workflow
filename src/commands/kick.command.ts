@@ -1,6 +1,8 @@
 import { Message } from 'discord.js';
 
-export const kickCommand = {
+import { IBotCommande } from './commands.types';
+
+export const kickCommand: IBotCommande = {
   name: '!kick',
   description: 'Kick!',
   execute(msg: Message<boolean>) {

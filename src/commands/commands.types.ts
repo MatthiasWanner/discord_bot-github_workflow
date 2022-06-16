@@ -9,3 +9,9 @@ export interface IBotCommande {
 export interface IBotCommandeCollection {
   [key: string]: IBotCommande;
 }
+
+export interface ISlashCommande {
+  name: string;
+  description: string;
+  type: number;
+}

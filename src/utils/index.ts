@@ -1,10 +1,7 @@
 import 'dotenv/config';
+import axios from 'axios';
 import { verifyKey } from 'discord-interactions';
 import { Response as ExpressResponse, Request } from 'express';
-import { Response as NodeFetchResponse, RequestInfo, RequestInit } from 'node-fetch';
-
-const fetch = (url: RequestInfo, init?: RequestInit): Promise<NodeFetchResponse> =>
-  import('node-fetch').then(({ default: fetch }) => fetch(url, init));
 
 type bufferArg = string | Uint8Array | ArrayBuffer | Buffer;
 
@@ -23,13 +20,12 @@ export function VerifyDiscordRequest(clientKey: string) {
   };
 }
 
-export async function DiscordRequest(endpoint: string, options: any): Promise<NodeFetchResponse> {
+export async function DiscordRequest<T>(endpoint: string, options: any): Promise<T> {
   // append endpoint to root API URL
   const url = 'https://discord.com/api/v10/' + endpoint;
-  // Stringify payloads
-  if (options.body) options.body = JSON.stringify(options.body);
-  // Use node-fetch to make requests
-  const res = await fetch(url, {
+
+  // Use axios to make requests
+  const res = await axios(url, {
     headers: {
       Authorization: `Bot ${process.env.DISCORD_TOKEN}`,
       'Content-Type': 'application/json; charset=UTF-8',
@@ -38,13 +34,32 @@ export async function DiscordRequest(endpoint: string, options: any): Promise<No
     ...options,
   });
   // throw API errors
-  if (!res.ok) {
-    const data = await res.json();
+  if (!res.data) {
     console.log(res.status);
-    throw new Error(JSON.stringify(data));
+    throw new Error(JSON.stringify(res.statusText));
   }
   // return original response
-  return res;
+  return res.data;
+}
+
+export function getRandomEmoji(): string {
+  const emojiList = [
+    '😭',
+    '😄',
+    '😌',
+    '🤓',
+    '😎',
+    '😤',
+    '🤖',
+    '😶‍🌫️',
+    '🌏',
+    '📸',
+    '💿',
+    '👋',
+    '🌊',
+    '✨',
+  ];
+  return emojiList[Math.floor(Math.random() * emojiList.length)];
 }
 
 export function capitalize(str: string): string {

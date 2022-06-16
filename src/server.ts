@@ -3,7 +3,7 @@ import dotenv from 'dotenv';
 import express from 'express';
 
 import api from './api';
-import { botCommands } from './commands';
+import { botCommands, HasGuildCommands, slashCommands } from './commands';
 import { IBotCommande } from './commands/commands.types';
 import { config } from './config';
 import { CustomClient } from './extensions';
@@ -15,8 +15,8 @@ const start = async (): Promise<void> => {
   const app = express();
   const { client, port } = config;
 
-  if (!client.id || !client.token || !client.publicKey)
-    throw new Error('Missing client ID, token or public key');
+  if (!client.id || !client.token || !client.publicKey || !client.guildId)
+    throw new Error('Missing client ID, token, public key or guild ID');
 
   app.use(express.json({ verify: VerifyDiscordRequest(client.publicKey) }));
 
@@ -25,6 +25,9 @@ const start = async (): Promise<void> => {
   app.listen(port, async () => {
     // eslint-disable-next-line no-console
     console.log(`Listening: http://localhost:${port}`);
+
+    // Check if guild commands from commands.json are installed (if not, install them)
+    HasGuildCommands(client.id as string, client.guildId as string, slashCommands);
   });
 
   const discordClient = new CustomClient({

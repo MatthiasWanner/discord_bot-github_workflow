@@ -2,7 +2,6 @@ export * from '../commands.types';
 
 import { AxiosError } from 'axios';
 
-import { config } from '../../config';
 import { DiscordRequest } from '../../utils';
 import { ISlashCommande } from '../commands.types';
 
@@ -28,11 +27,10 @@ export async function InstallGuildCommand(
   try {
     await DiscordRequest(endpoint, {
       method: 'POST',
-      body: { ...command, application_id: config.client.id },
+      data: command,
     });
   } catch (err) {
     console.error((err as AxiosError).response?.data);
-    console.error((err as AxiosError).request?.body);
   }
 }
 
@@ -44,7 +42,7 @@ async function HasGuildCommand(
 ): Promise<void> {
   // API endpoint to get and post guild commands
   const endpoint = `applications/${appId}/guilds/${guildId}/commands`;
-  console.log(command);
+
   try {
     const data = await DiscordRequest<any[]>(endpoint, { method: 'GET' });
 

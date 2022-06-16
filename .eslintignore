@@ -1,0 +1,8 @@
+# Folders
+/.cache
+/.git
+/dist
+/build
+/docs
+/misc
+/node_modules

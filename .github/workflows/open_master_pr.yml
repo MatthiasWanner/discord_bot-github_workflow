@@ -1,0 +1,36 @@
+name: Pull Request on master branch
+
+# only trigger on pull request open events
+on:
+  pull_request:
+    branches:
+      - master
+    types:
+      - 'opened'
+
+jobs:
+  master_pr:
+    name: 'PR on Master'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout the code'
+        uses: actions/checkout@v2
+
+      - name: 'Tag team users on Discord'
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          DISCORD_USERNAME: GitHub Actions
+        uses: Ilshidur/action-discord@master
+        with:
+          args: '<@&${{ secrets.DISCORD_ROLE }}>'
+
+      - name: 'Create embed informations to Discord Channel'
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          title: '${{ github.event.pull_request.user.login }} opened a PR on ${{ github.base_ref }} ✨'
+          description: |
+            Branch `${{ github.head_ref }}`
+            **Click [here](https://github.com/${{ github.repository }}/pull/${{ github.event.number }} "GitHub PR link") to review!**
+          username: GitHub Actions
+          noprefix: true

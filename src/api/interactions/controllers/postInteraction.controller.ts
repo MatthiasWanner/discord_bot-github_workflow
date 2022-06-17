@@ -4,7 +4,8 @@ import { RequestHandler } from 'express';
 
 import { IDiscordChannel } from '../../../types/channels.types';
 import { ICreateRoleBody, IDiscordRole } from '../../../types/roles.types';
-import { DiscordRequest, getRandomEmoji } from '../../../utils';
+import { ICreateWebhookBody, IDiscordWebhook } from '../../../types/webhooks.types';
+import { capitalize, DiscordRequest, getRandomEmoji } from '../../../utils';
 import { IInteractionBody } from '../interactions.types';
 
 const postInteractionController: RequestHandler<
@@ -13,7 +14,7 @@ const postInteractionController: RequestHandler<
   IInteractionBody,
   null
 > = async (req, res) => {
-  const { type, data, channel_id, guild_id } = req.body;
+  const { type, data, channel_id: channelId, guild_id: guildId } = req.body;
 
   /**
    * Handle verification requests
@@ -41,25 +42,36 @@ const postInteractionController: RequestHandler<
       });
     }
 
-    if (name === 'project' && channel_id && guild_id) {
+    if (name === 'project' && channelId && guildId) {
       // Create the dedicated role
-      const { name = 'channelname' } = await DiscordRequest<IDiscordChannel>(
-        `channels/${channel_id}`,
+      const { name: channelName = 'channel_name' } = await DiscordRequest<IDiscordChannel>(
+        `channels/${channelId}`,
         {
           method: 'GET',
         }
       );
 
-      const data: ICreateRoleBody = {
+      const roleBoby: ICreateRoleBody = {
         mentionable: true,
-        name: `${name}team`,
+        name: `${channelName}_team`,
       };
 
-      const { id: roleId, name: roleName } = await DiscordRequest<IDiscordRole>(
-        `guilds/${guild_id}/roles`,
+      const { id: roleId } = await DiscordRequest<IDiscordRole>(`guilds/${guildId}/roles`, {
+        method: 'POST',
+        data: roleBoby,
+      });
+
+      // Create dedicated webhook
+
+      const webhookBody: ICreateWebhookBody = {
+        name: `${capitalize(channelName || 'workflow')}_webhook`,
+      };
+
+      const { id: webhookId, token: webhookToken } = await DiscordRequest<IDiscordWebhook>(
+        `channels/${channelId}/webhooks`,
         {
           method: 'POST',
-          data,
+          data: webhookBody,
         }
       );
 
@@ -74,9 +86,19 @@ const postInteractionController: RequestHandler<
               .setTitle('New team project')
               .setColor(10181046)
               .setDescription(
-                `New role ${roleName} was created to tag the team.Add this variable into your github repo secrets`
+                `A new role <@&${roleId}> and a channel webhook have been created for the occasion 🥂.\n
+                1️⃣ Assign this role to the project team so that they are notified of events.\n
+                2️⃣ Add this variable into your GitHub repo secrets 🔐`
               )
-              .addFields({ name: 'DISCORD_ROLE', value: roleId }),
+              .addFields(
+                { name: 'DISCORD_ROLE', value: roleId },
+                {
+                  name: 'DISCORD_WEBHOOK_URL',
+                  value: webhookToken
+                    ? `https://discord.com/api/webhooks/${webhookId}/${webhookToken}`
+                    : 'Error during webhook creation, please create it manually',
+                }
+              ),
           ],
         },
       });

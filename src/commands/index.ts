@@ -1,5 +1,6 @@
 import { kickCommand } from './kick.command';
 import { pingCommand } from './ping.command';
+import { projectCommand } from './project.command';
 import { testCommand } from './test.command';
 
 export * from './commands.types';
@@ -11,4 +12,4 @@ export const botCommands = {
   kick: kickCommand,
 };
 
-export const slashCommands = [testCommand];
+export const slashCommands = [testCommand, projectCommand];

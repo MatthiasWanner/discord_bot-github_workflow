@@ -1,5 +1,3 @@
-export * from '../commands.types';
-
 import { AxiosError } from 'axios';
 
 import { DiscordRequest } from '../../utils';

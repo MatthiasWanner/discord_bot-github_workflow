@@ -88,7 +88,7 @@ const postInteractionController: RequestHandler<
               .setDescription(
                 `A new role <@&${roleId}> and a channel webhook have been created for the occasion 🥂.\n
                 1️⃣ Assign this role to the project team so that they are notified of events.\n
-                2️⃣ Add this variable into your GitHub repo secrets 🔐`
+                2️⃣ Add this variables into your GitHub repo secrets 🔐`
               )
               .addFields(
                 { name: 'DISCORD_ROLE', value: roleId },

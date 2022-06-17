@@ -20,6 +20,12 @@ export function VerifyDiscordRequest(clientKey: string) {
   };
 }
 
+/**
+ *
+ * @param endpoint The endpoint to call without beginning "/"
+ * @param options request option (headers, data as body, etc.)
+ * @returns Object or array according to API and provided T parameter
+ */
 export async function DiscordRequest<T>(endpoint: string, options: any): Promise<T> {
   // append endpoint to root API URL
   const url = 'https://discord.com/api/v10/' + endpoint;

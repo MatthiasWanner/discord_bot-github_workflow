@@ -46,3 +46,15 @@ export interface IThreadMetadata {
   invitable?: boolean;
   create_timestamp?: string | null;
 }
+
+export interface IDiscordWelcomeScreen {
+  description: string | null;
+  welcome_channels: IDiscordWelcomeScreenChannel[];
+}
+
+export interface IDiscordWelcomeScreenChannel {
+  channel_id: string;
+  description: string;
+  emoji_id: string | null;
+  emoji_name: string | null;
+}

@@ -12,7 +12,6 @@ This project contain node server code interacting with my Github Worflow bot. En
 
 ## Pre-requisites
 
-- Retrieve your [Server ID](https://support.discord.com/hc/en-us/articles/206346498-Where-can-I-find-my-User-Server-Message-ID- 'Discord article to get a server ID')
 - Create a discord [Bot](https://discord.com/developers/docs/getting-started#creating-an-app 'Discord documentation to create a bot') with following permissions and install it to your server
 
  <div style="text-align:center;">
@@ -38,7 +37,6 @@ PORT=5000
 DISCORD_TOKEN=<Bot Token>
 APP_ID=<Application ID>
 PUBLIC_KEY=<Application public key>
-GUILD_ID=<Id of the server>
 ```
 
 ## Run Locally
@@ -74,7 +72,7 @@ If you want to test slash commands interactons with a local server, you can crea
 
 ## Features
 
-1️⃣ Launch `/project` slash command into the channel you want to receive events informations
+1️⃣ Launch `/project` slash command into the channel where you want to receive GitHub events informations
 
 <div style="text-align:center;">
 

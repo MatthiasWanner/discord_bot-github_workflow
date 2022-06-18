@@ -3,24 +3,16 @@ import { AxiosError } from 'axios';
 import { DiscordRequest } from '../../utils';
 import { ISlashCommand } from '../commands.types';
 
-export async function HasGuildCommands(
-  appId: string,
-  guildId: string,
-  commands: ISlashCommand[]
-): Promise<void> {
-  if (guildId === '' || appId === '') return;
+export async function HasGuildCommands(appId: string, commands: ISlashCommand[]): Promise<void> {
+  if (appId === '') return;
 
-  commands.forEach(c => HasGuildCommand(appId, guildId, c));
+  commands.forEach(c => HasGuildCommand(appId, c));
 }
 
 // Installs a command
-export async function InstallGuildCommand(
-  appId: string,
-  guildId: string,
-  command: ISlashCommand
-): Promise<void> {
+export async function InstallGuildCommand(appId: string, command: ISlashCommand): Promise<void> {
   // API endpoint to get and post guild commands
-  const endpoint = `applications/${appId}/guilds/${guildId}/commands`;
+  const endpoint = `applications/${appId}/commands`;
   // install command
   try {
     await DiscordRequest(endpoint, {
@@ -33,13 +25,9 @@ export async function InstallGuildCommand(
 }
 
 // Checks for a command
-async function HasGuildCommand(
-  appId: string,
-  guildId: string,
-  command: ISlashCommand
-): Promise<void> {
+async function HasGuildCommand(appId: string, command: ISlashCommand): Promise<void> {
   // API endpoint to get and post guild commands
-  const endpoint = `applications/${appId}/guilds/${guildId}/commands`;
+  const endpoint = `applications/${appId}/commands`;
 
   try {
     const data = await DiscordRequest<any[]>(endpoint, { method: 'GET' });
@@ -49,7 +37,7 @@ async function HasGuildCommand(
       // This is just matching on the name, so it's not good for updates
       if (!installedNames.includes(command['name'])) {
         console.log(`Installing "${command['name']}"`);
-        InstallGuildCommand(appId, guildId, command);
+        InstallGuildCommand(appId, command);
       } else {
         console.log(`"${command['name']}" command already installed`);
       }

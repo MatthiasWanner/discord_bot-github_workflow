@@ -15,7 +15,7 @@ const start = async (): Promise<void> => {
   const app = express();
   const { client, port } = config;
 
-  if (!client.id || !client.token || !client.publicKey || !client.guildId)
+  if (!client.id || !client.token || !client.publicKey)
     throw new Error('Missing client ID, token, public key or guild ID');
 
   app.use(express.json({ verify: VerifyDiscordRequest(client.publicKey) }));
@@ -27,7 +27,7 @@ const start = async (): Promise<void> => {
     console.log(`Listening: http://localhost:${port}`);
 
     // Check if guild commands from commands.json are installed (if not, install them)
-    HasGuildCommands(client.id as string, client.guildId as string, slashCommands);
+    HasGuildCommands(client.id as string, slashCommands);
   });
 
   const discordClient = new CustomClient({

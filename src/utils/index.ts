@@ -3,9 +3,9 @@ import axios from 'axios';
 import { verifyKey } from 'discord-interactions';
 import { Response as ExpressResponse, Request } from 'express';
 
-type bufferArg = string | Uint8Array | ArrayBuffer | Buffer;
+import { bufferArg, DiscordRequestHandler, VerifyRequestHandler } from './utils.types';
 
-export function VerifyDiscordRequest(clientKey: string) {
+export const VerifyDiscordRequest: VerifyRequestHandler = (clientKey: string) => {
   return function (req: Request, res: ExpressResponse, buf: bufferArg) {
     const signature = req.get('X-Signature-Ed25519');
     const timestamp = req.get('X-Signature-Timestamp');
@@ -18,7 +18,7 @@ export function VerifyDiscordRequest(clientKey: string) {
       throw new Error('Bad request signature');
     }
   };
-}
+};
 
 /**
  *
@@ -26,7 +26,7 @@ export function VerifyDiscordRequest(clientKey: string) {
  * @param options request option (headers, data as body, etc.)
  * @returns Object or array according to API and provided T parameter
  */
-export async function DiscordRequest<T>(endpoint: string, options: any): Promise<T> {
+export const DiscordRequest: DiscordRequestHandler = async (endpoint: string, options: any) => {
   // append endpoint to root API URL
   const url = 'https://discord.com/api/v10/' + endpoint;
 
@@ -46,7 +46,7 @@ export async function DiscordRequest<T>(endpoint: string, options: any): Promise
   }
   // return original response
   return res.data;
-}
+};
 
 export function getRandomEmoji(): string {
   const emojiList = [

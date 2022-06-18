@@ -22,7 +22,7 @@ export class DiscordApplicationCommand {
       case 'test':
         return this.testCommandeHandler();
       case 'project':
-        return await new ProjectCommand(this.channelId, this.guildId).projectCommandHandler();
+        return await new ProjectCommand(this.channelId, this.guildId).execute();
       default:
         return {
           type: InteractionResponseTypes.PONG,

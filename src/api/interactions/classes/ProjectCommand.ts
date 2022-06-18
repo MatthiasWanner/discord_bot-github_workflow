@@ -9,7 +9,7 @@ import { Webhook } from './WebHook';
 export class ProjectCommand {
   constructor(private channelId: string, private guildId: string) {}
 
-  public async projectCommandHandler(): Promise<IInteractionResponse> {
+  public async execute(): Promise<IInteractionResponse> {
     const channelName = await new Channel(this.channelId).getChannelName();
     const roleId = await new Role(channelName, this.guildId).getNewRoleId();
     return {

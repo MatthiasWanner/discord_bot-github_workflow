@@ -1,16 +1,16 @@
 import { Message } from 'discord.js';
 
-export interface IBotCommande {
+export interface IBotCommand {
   name: string;
   description: string;
   execute(msg: Message<boolean>): void;
 }
 
 export interface IBotCommandeCollection {
-  [key: string]: IBotCommande;
+  [key: string]: IBotCommand;
 }
 
-export interface ISlashCommande {
+export interface ISlashCommand {
   name: string;
   description: string;
   type: number;

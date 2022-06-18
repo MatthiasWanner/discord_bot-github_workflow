@@ -1,12 +1,12 @@
 import { AxiosError } from 'axios';
 
 import { DiscordRequest } from '../../utils';
-import { ISlashCommande } from '../commands.types';
+import { ISlashCommand } from '../commands.types';
 
 export async function HasGuildCommands(
   appId: string,
   guildId: string,
-  commands: ISlashCommande[]
+  commands: ISlashCommand[]
 ): Promise<void> {
   if (guildId === '' || appId === '') return;
 
@@ -17,7 +17,7 @@ export async function HasGuildCommands(
 export async function InstallGuildCommand(
   appId: string,
   guildId: string,
-  command: ISlashCommande
+  command: ISlashCommand
 ): Promise<void> {
   // API endpoint to get and post guild commands
   const endpoint = `applications/${appId}/guilds/${guildId}/commands`;
@@ -36,7 +36,7 @@ export async function InstallGuildCommand(
 async function HasGuildCommand(
   appId: string,
   guildId: string,
-  command: ISlashCommande
+  command: ISlashCommand
 ): Promise<void> {
   // API endpoint to get and post guild commands
   const endpoint = `applications/${appId}/guilds/${guildId}/commands`;

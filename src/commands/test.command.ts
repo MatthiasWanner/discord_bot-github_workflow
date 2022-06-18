@@ -1,7 +1,7 @@
-import { ISlashCommande } from './commands.types';
+import { ISlashCommand } from './commands.types';
 
 // Simple test command
-export const testCommand: ISlashCommande = {
+export const testCommand: ISlashCommand = {
   name: 'test',
   description: 'Basic guild command',
   type: 1,

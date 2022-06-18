@@ -4,7 +4,7 @@ import express from 'express';
 
 import api from './api';
 import { botCommands, HasGuildCommands, slashCommands } from './commands';
-import { IBotCommande } from './commands/commands.types';
+import { IBotCommand } from './commands/commands.types';
 import { config } from './config';
 import { CustomClient } from './extensions';
 import { VerifyDiscordRequest } from './utils';
@@ -43,7 +43,7 @@ const start = async (): Promise<void> => {
 
   discordClient.login(client.token);
 
-  const botCommandsCollection = new Collection<string, IBotCommande>();
+  const botCommandsCollection = new Collection<string, IBotCommand>();
 
   (Object.keys(botCommands) as (keyof typeof botCommands)[]).map(key => {
     botCommandsCollection.set(botCommands[key].name, botCommands[key]);

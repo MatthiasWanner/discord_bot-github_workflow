@@ -1,8 +1,8 @@
 import { Message } from 'discord.js';
 
-import { IBotCommande } from './commands.types';
+import { IBotCommand } from './commands.types';
 
-export const pingCommand: IBotCommande = {
+export const pingCommand: IBotCommand = {
   name: 'ping',
   description: 'Ping!',
   execute(msg: Message<boolean>) {

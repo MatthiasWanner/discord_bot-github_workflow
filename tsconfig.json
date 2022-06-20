@@ -15,5 +15,5 @@
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true
   },
-  "exclude": ["build", "node_modules", "tests"]
+  "exclude": ["build", "node_modules", "tests", "*/**/*.example.*"]
 }
